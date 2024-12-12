@@ -7,6 +7,9 @@ const { sequelize } = require("./models");
 // Import Routes
 const authRoutes = require("./routes/auth");
 const rideRoutes = require("./routes/rides");
+const userRoutes = require("./routes/users");
+const fareRoutes = require("./routes/fares");
+const bookingRoutes = require("./routes/bookings");
 
 const app = express();
 
@@ -17,6 +20,9 @@ app.use(bodyParser.json());
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/rides", rideRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/fares", fareRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
