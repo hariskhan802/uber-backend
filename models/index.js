@@ -5,25 +5,32 @@ const Sequelize = require("sequelize");
 const process = require("process");
 
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
 const db = {};
 
 let sequelize;
 
-if (process.env.USE_ENV_VARIABLE) {
-  // Use environment variable for full connection string
-  sequelize = new Sequelize(process.env[process.env.USE_ENV_VARIABLE], {
+// Use DATABASE_URL if available
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: "postgres",
+    protocol: "postgres",
     logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, // Disable SSL validation for hosted DBs
+      },
+    },
   });
 } else {
-  // Use individual environment variables
+  // Fallback to individual environment variables
   sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USERNAME,
     process.env.DB_PASSWORD,
     {
-      host: process.env.DB_HOST,
-      dialect: process.env.DB_DIALECT,
+      host: process.env.DB_HOST || "127.0.0.1",
+      dialect: process.env.DB_DIALECT || "postgres",
       logging: false,
     }
   );
